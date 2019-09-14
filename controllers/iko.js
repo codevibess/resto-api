@@ -25,16 +25,23 @@ res.status(200).json(tables)
 };
 
 exports.changeStatusOfTable = async (req, res, next) => {
-    const {newStatusOfTable, _id} = req
+    const {newStatusOfTable, _id} = req.body
 
-    Table.update({_id: _id}, {$set:{status:newStatusOfTable}})
+    console.log(newStatusOfTable, _id, req.body)
+//    const table = Table.update({ _id }, {$set:{status:newStatusOfTable}})
+//     console.log(table)
+    // res.status(203).json(table)
 
+Table.findOneAndUpdate({ _id }, { status: newStatusOfTable }, {upsert:true}, function(err, doc){
+    if (err) return res.send(500, { error: err });
+    return res.send("succesfully saved");
+});
 }
 
 
 exports.addTable = async (req, res, next) => {
 
-    const {number, status, capacity} = req
+    const {number, status, capacity} = req.body
 
     const table = new Table({
         number,

@@ -114,6 +114,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/api/iko/tables', ikoController.getTables)
 
 app.post('/api/iko/tables', ikoController.addTable)
+
+app.post('/api/iko/changeTableStatus', ikoController.changeStatusOfTable)
 /**
  * Error Handler.
  */
