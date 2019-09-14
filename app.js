@@ -116,11 +116,23 @@ app.get('/api/iko/tables', ikoController.getTables)
 app.post('/api/iko/tables', ikoController.addTable)
 
 app.post('/api/iko/changeTableStatus', ikoController.changeStatusOfTable)
+
+
+/* Dishes */
+app.post('/api/iko/addDish', ikoController.addDish)
+
+app.get('/api/iko/dishes', ikoController.getDishes)
+
+app.delete('/api/iko/dishes', ikoController.removeDish)
+
+app.put('/api/iko/dishes', ikoController.editDish)
+
+
+
 /**
  * Error Handler.
  */
 if (process.env.NODE_ENV === 'development') {
-  // only use in development
   app.use(errorHandler());
 } else {
   app.use((err, req, res, next) => {
