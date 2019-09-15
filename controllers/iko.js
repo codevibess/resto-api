@@ -38,10 +38,14 @@ exports.addTable = async (req, res, next) => {
 exports.changeStatusOfTable = async (req, res, next) => {
   const { newStatusOfTable, _id } = req.body
 
-  Table.findOneAndUpdate({ _id }, { status: newStatusOfTable }, { upsert: true }, function (err, doc) {
-    if (err) return res.send(500, { error: err });
-    return res.status(205).json("succesfully updated table");
-  })
+  Table.findOneAndUpdate(
+    { _id },
+    { status: newStatusOfTable },
+    { upsert: true },
+    function (err, doc) {
+      if (err) return res.send(500, { error: err });
+      return res.status(205).json("succesfully updated table");
+    })
 }
 
 
@@ -85,10 +89,14 @@ exports.removeDish = async (req, res, next) => {
 exports.editDish = async (req, res, next) => {
   const { _id, ...dishInformation } = req.body
 
-  Dish.findOneAndUpdate({ _id }, dishInformation, { upsert: true }, function (err, doc) {
-    if (err) return res.send(500, { error: err });
-    return res.status(205).json("succesfully updated dish");
-  })
+  Dish.findOneAndUpdate(
+    { _id },
+    dishInformation,
+    { upsert: true },
+    function (err, doc) {
+      if (err) return res.send(500, { error: err });
+      return res.status(205).json("succesfully updated dish");
+    })
 
   res.status(201).json(dish)
 }
@@ -119,14 +127,12 @@ exports.createReceipt = async (req, res, next) => {
     waiter
   })
 
-
   receipt.save((err) => {
     if (err) { return next(err); }
 
   });
-  console.log(receipt)
   res.status(201).json(receipt)
-  
+
 }
 
 exports.addPositionToReceipt = async (req, res, next) => {
@@ -134,12 +140,15 @@ exports.addPositionToReceipt = async (req, res, next) => {
   const { _id, dishId } = req.body
 
   const dish = await Dish.findOne({ _id: dishId });
-  console.log(dish)
 
-  Receipt.findOneAndUpdate({ _id }, { items: dish }, { upsert: true }, function (err, doc) {
-    if (err) return res.send(500, { error: err });
-    return res.status(205).json("succesfully added position to a receipt");
-  })
+  Receipt.findOneAndUpdate(
+    { _id },
+    { items: dish },
+    { upsert: true },
+    function (err, doc) {
+      if (err) return res.send(500, { error: err });
+      return res.status(205).json("succesfully added position to a receipt");
+    })
 }
 
 
@@ -147,9 +156,13 @@ exports.removePositionFromReceipt = async (req, res, next) => {
 
   const { _id, dishId } = req.body
 
-
-  Receipt.findOneAndUpdate({ _id }, { $pull: { items:{ _id : dishId }} }, function (err, doc) {
-    if (err) return res.send(500, { error: err });
-    return res.status(205).json("succesfully removed position from a receipt" + doc);
-  })
+  console.log(_id, dishId)
+  Receipt.findOneAndUpdate(
+    { _id },
+    { $pull: { "items": { "_id": dishId } } },
+    { multi: true },
+    function (err, doc) {
+      if (err) return res.send(500, { error: err });
+      return res.status(205).json("succesfully removed position from a receipt" + doc);
+    })
 }
